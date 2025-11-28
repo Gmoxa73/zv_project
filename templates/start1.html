@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+window.addEventListener('load', function() {
+  const input = document.getElementById('search');
+  if (input) input.focus();
+});    
+function restoreValue() {
+  const val = localStorage.getItem('searchValue');
+  if (val !== null) {
+    document.getElementById('search').value = val;
+  }
+}    
+function submitForm() {
+  let val = document.getElementById('search').value;
+  localStorage.setItem('searchValue', val);  
+  document.getElementById("myForm").submit();
+} 
+</script>
+
+<form id="myForm">
+  <input type="text" id="search" name="q" autocomplete="off" onfocus="restoreValue()" oninput="submitForm()">
+</form>
+
+<ul>
+  {% for a in addr %}
+    <li>{{ a.name }} — {{ a.okrug.name }}</li>
+  {% endfor %}
+</ul>
+
+</div>
+
+</body>
+</html>

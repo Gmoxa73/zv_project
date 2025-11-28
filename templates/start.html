@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Raions List with IP Search</title>
+  <style>
+    .raions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    .raion-card {
+      position: relative;
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      min-height: 100px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      overflow: hidden;
+    }
+
+    .raion-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    }
+
+    .raion-card:focus-visible {
+      outline: 2px solid #4a90e2;
+      outline-offset: 2px;
+      transform: translateY(-4px);
+    }
+
+    .raion-card-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    /* Счетчик в левом верхнем углу карточки */
+    .raion-count {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: #4a90e2;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1;
+      white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    /* Заголовок района */
+    .raion-title {
+      margin: 0;
+      padding-top: 28px; /* чтобы не перекрывался счетчиком */
+      font-size: 1.1rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<form id="myForm">
+  <input type="radio" id="adr" name="ch" value="1" autocomplete="off" checked="checked" onclick="saveRadioValue()"> Адрес
+  <input type="radio" id="ip" name="ch" value="2" autocomplete="off" onclick="saveRadioValue()"> IP
+  <input type="radio" id="id" name="ch" value="3" autocomplete="off" onclick="saveRadioValue()"> ID<br><br>
+  <input type="text" id="search" name="q" autocomplete="off" oninput="submitForm()">
+</form>
+
+<div class="raions-grid">
+{% for okrug in okrugs %}
+    <a href="{% url 'raion_detail' okrug.pk %}?q={{ query }}" class="raion-card-link" title="Перейти к району {{ okrug.name }}">
+    <div class="raion-card">
+        <span class="raion-count">{{ okrug.address_count }} адрес(а)</span>
+        <h3 class="raion-title">{{ okrug.name }}</h3>
+    </div>
+  </a>
+{% endfor %}
+</div>
+
+<script>
+window.addEventListener('load', function() {
+  const input = document.getElementById('search');
+  if (input) input.focus();
+
+  // Восстановление значений при загрузке
+  restoreValue();
+});
+
+function restoreValue() {
+  const val = localStorage.getItem('searchValue');
+  const radioVal = localStorage.getItem('chValue');
+
+  if (val !== null) {
+    const searchEl = document.getElementById('search');
+    if (searchEl) searchEl.value = val;
+  }
+
+  // Восстановление выбранной радиокнопки
+  if (radioVal !== null) {
+    const radio = document.querySelector(`input[name="ch"][value="${radioVal}"]`);
+    if (radio) radio.checked = true;
+  } else {
+    // Если сохранения нет, можно утвердить дефолтное состояние
+    // Например, оставить уже установленное значение (первую кнопку как в HTML)
+  }
+}
+
+// Сохранение выбранного радио в localStorage
+function saveRadioValue() {
+  const selected = document.querySelector('input[name="ch"]:checked');
+  if (selected) {
+    localStorage.setItem('chValue', selected.value);
+  }
+}
+
+// Сохранение значения текста и отправка формы
+function submitForm() {
+  let val = document.getElementById('search').value;
+  localStorage.setItem('searchValue', val);
+  document.getElementById("myForm").submit();
+}
+</script>
+</html>
