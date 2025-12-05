@@ -63,7 +63,7 @@
   <h1>Район: {{ okrug.name }}</h1>
 
   <div class="addresses-grid" id="addresses-grid">
-    {% for a in addresses %}
+    {% for a in addresses%}
       <div class="address-card" data-addr-id="{{ a.id }}" aria-label="Адрес: {{ a.name }}">
         <div class="address-title">
           id: {{ a.adr_number }}<br>Адрес: {{ a.name }}
@@ -74,7 +74,7 @@
             {% for dev in a.back_device.all %}
               <a href="{% url 'device_detail' dev.pk %}" class="device-card" aria-label="Устройство {{ dev.ip }} типа {{ dev.type.type }}">
                 <strong>{{ dev.ip }}</strong><br>
-                <span>{{ dev.type.type }}</span>
+                <span>{{ dev.type.name }}</span>
               </a>
             {% endfor %}
           {% else %}

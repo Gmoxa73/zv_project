@@ -12,17 +12,19 @@ class Okrug(models.Model):
 
 class Address(models.Model):
     name = models.CharField(max_length=50)
-    adr_number = models.IntegerField()
+    lat = models.IntegerField(blank=True, null=True)
+    lng = models.IntegerField(blank=True, null=True)
+    adr_id = models.IntegerField(unique=True)
     okrug = models.ForeignKey(Okrug, on_delete=models.CASCADE, related_name='back_addresses')
 
     def __str__(self):
         return self.name
 
 class Device(models.Model):
-    ip = models.CharField(max_length=15)
+    ip = models.CharField(max_length=15, unique=True)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='back_device')
-    # type = (models.ForeignKey('Types', on_delete=models.CASCADE, related_name='back_type'))
-
+    type = models.ForeignKey(TypeA, on_delete=models.CASCADE, related_name='back_type')
+    cms = models.IntegerField(blank=True, null=True, unique=True)
 
     def __str__(self):
         return self.ip

@@ -74,7 +74,7 @@
             {% for dev in a.back_device.all %}
               <a href="{% url 'device_detail' dev.pk %}" class="device-card" aria-label="Устройство {{ dev.ip }} типа {{ dev.type.type }}">
                 <strong>{{ dev.ip }}</strong><br>
-                <span>{{ dev.type.type }}</span>
+                <span>{{ dev.type.name }}</span>
               </a>
             {% endfor %}
           {% else %}

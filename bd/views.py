@@ -1,6 +1,17 @@
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
+from rest_framework import viewsets
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+
 from .models import Address, Okrug, Device
+from .serializers import AddressSerializer
+
+class AddressViewSet(viewsets.ModelViewSet):
+    queryset = Address.objects.all().select_related('okrug').prefetch_related('back_device__type')
+    serializer_class = AddressSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]  # или [AllowAny]
+
 
 def address_list(request):
     query = request.GET.get('q', '').strip()
@@ -19,11 +30,11 @@ def address_list(request):
         addr = Address.objects.all().select_related('okrug')
 
     # Округа из найденных адресов
-    okrug_ids = {a.okrug_id for a in addr if a.okrug}
+    okrug_ids = {a.okrug_id for a in addr.order_by('adr_id') if a.okrug}
     okrugs = Okrug.objects.filter(id__in=okrug_ids).annotate(address_count=Count('back_addresses'))
-    if len(okrugs) == 1:
+
+    if len(okrug_ids) == 1:
         template = 'raion_detail2.html'
-        print(okrugs)
     elif len(okrugs) > 1:
         template = 'start.html'
     else:

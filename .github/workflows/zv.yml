@@ -1,0 +1,45 @@
+name: Testing and Deployment
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  testing:
+    runs-on: ubuntu-24.04 [Beta]
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DEBUG: ${{ secrets.DEBUG }}
+      ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+      ENGINE: ${{ secrets.ENGINE }}
+      NAME: ${{ secrets.NAME }}
+      USER: ${{ secrets.USER }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      HOST: ${{ secrets.HOST }}
+      PORT: ${{ secrets.PORT }}
+    services:
+      postgresql_main:
+        image: postgres:12
+        env:
+          POSTGRES_BD: ${{ env.NAME }}
+          POSTGRES_USER: ${{ env.USER }}
+          POSTGRES_PASSWORD: ${{ env.PASSWORD }}
+        ports:
+          - 5432:5432
+        options:
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Проверяем на наличие изменений
+        uses: actions/checkout@v4
+
+      - name: Установка Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      - name: Установка зависимостей
+        run: pip install requirements.txt
+
