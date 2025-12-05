@@ -14,7 +14,7 @@ class Address(models.Model):
     name = models.CharField(max_length=50)
     lat = models.IntegerField(blank=True, null=True)
     lng = models.IntegerField(blank=True, null=True)
-    adr_id = models.IntegerField(unique=True)
+    adr_id = models.IntegerField(unique=True, blank=True, null=True)
     okrug = models.ForeignKey(Okrug, on_delete=models.CASCADE, related_name='back_addresses')
 
     def __str__(self):
