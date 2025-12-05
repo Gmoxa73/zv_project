@@ -64,7 +64,7 @@ def raion_detail(request, pk, q=None):
         elif radio == '3':
             addresses = Address.objects.filter(
                 okrug=okrug,
-                adr_number__icontains=query,
+                adr_id__icontains=query,
             )
         elif radio == '2':
             addresses = Address.objects.filter(
