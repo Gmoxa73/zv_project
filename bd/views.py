@@ -25,7 +25,7 @@ def address_list(request):
         elif radio == '2':
             addr = Address.objects.filter(back_device__ip__icontains=query).select_related('okrug')
         elif radio == '3':
-            addr = Address.objects.filter(adr_number__icontains=query).select_related('okrug')
+            addr = Address.objects.filter(adr_id__icontains=query).select_related('okrug')
     else:
         addr = Address.objects.all().select_related('okrug')
 
