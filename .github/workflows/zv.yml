@@ -50,6 +50,3 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: expect /home/gmoxa/zv_project/deploy.exp
-
-
-
