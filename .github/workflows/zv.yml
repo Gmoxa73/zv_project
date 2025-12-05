@@ -41,5 +41,5 @@ jobs:
           python-version: 3.12
 
       - name: Установка зависимостей
-        run: pip install requirements.txt
+        run: pip install -r requirements.txt
 
