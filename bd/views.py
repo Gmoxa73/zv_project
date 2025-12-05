@@ -29,6 +29,7 @@ def address_list(request):
     else:
         addr = Address.objects.all().select_related('okrug')
 
+
     # Округа из найденных адресов
     okrug_ids = {a.okrug_id for a in addr.order_by('adr_id') if a.okrug}
     okrugs = Okrug.objects.filter(id__in=okrug_ids).annotate(address_count=Count('back_addresses'))
@@ -39,6 +40,7 @@ def address_list(request):
         template = 'start.html'
     else:
         template = 'start.html'
+
     context = {
         'addr': addr,
         'okrugs': okrugs,
