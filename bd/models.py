@@ -12,6 +12,7 @@ class Okrug(models.Model):
 
 class Address(models.Model):
     name = models.CharField(max_length=50)
+    description = models.TextField()
     lat = models.IntegerField(blank=True, null=True)
     lng = models.IntegerField(blank=True, null=True)
     adr_id = models.IntegerField(unique=True, blank=True, null=True)
