@@ -15,7 +15,7 @@ class OkrugAdmin(admin.ModelAdmin):
 
 @admin.register(Address)
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'okrug')
+    list_display = ('id', 'name', 'description', 'okrug')
     list_filter = ('adr_id', 'name', 'okrug')
     search_fields = ('adr_id', 'name')
 

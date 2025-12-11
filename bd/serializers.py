@@ -23,7 +23,7 @@ class AddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Address
-        fields = ['id', 'name', 'adr_id', 'lat', 'lng', 'okrug', 'okrug_name', 'back_device']
+        fields = ['id', 'name', 'description', 'adr_id', 'lat', 'lng', 'okrug', 'okrug_name', 'back_device']
 
     def get_okrug_name(self, obj):
         return obj.okrug.name if obj.okrug is not None else None
