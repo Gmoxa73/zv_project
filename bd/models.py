@@ -11,7 +11,7 @@ class Okrug(models.Model):
         return self.name
 
 class Address(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     lat = models.IntegerField(blank=True, null=True)
     lng = models.IntegerField(blank=True, null=True)
