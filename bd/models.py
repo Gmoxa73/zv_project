@@ -29,3 +29,11 @@ class Device(models.Model):
 
     def __str__(self):
         return self.ip
+
+class Work(models.Model):
+    date = models.DateField()
+    status = models.CharField(max_length=50)
+    device = models.ForeignKey(Device, on_delete=models.CASCADE, related_name='works')
+
+    def __str__(self):
+        return self.date

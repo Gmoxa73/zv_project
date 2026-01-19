@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 
-from bd.views import address_list, raion_detail, device_detail, destination_page, AddressViewSet
+from bd.views import address_list, raion_detail, device_detail, destination_page, AddressViewSet, WorkListCreateView, \
+    WorkDetailView
 
 router = DefaultRouter()
 router.register(r'api', AddressViewSet)
@@ -33,4 +34,6 @@ urlpatterns = [
     path('devices/<int:pk>/', device_detail, name='device_detail'),
     path('qust<int:addr_id>', destination_page, name='destination_page'),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    path('works/', WorkListCreateView.as_view(), name='work-list'),
+    path('works/<int:pk>/', WorkDetailView.as_view(), name='work-detail'),
 ] + router.urls

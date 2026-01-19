@@ -1,11 +1,14 @@
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
-from rest_framework import viewsets
-from rest_framework.generics import ListAPIView
+from rest_framework import viewsets, status
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from .models import Address, Okrug, Device
-from .serializers import AddressSerializer
+from .models import Address, Okrug, Device, Work
+from .serializers import AddressSerializer, WorkSerializer
+
 
 class AddressViewSet(viewsets.ModelViewSet):
     queryset = Address.objects.all().select_related('okrug').prefetch_related('back_device__type')
@@ -89,3 +92,31 @@ def device_detail(request, pk):
 
 def destination_page(request, addr_id):
     return render(request, 'destination_page.html', {'addr_id': addr_id})
+
+class WorkListCreateView(APIView):
+    """
+    GET: список работ
+    POST: создание новой работы
+    """
+
+    def get(self, request):
+        works = Work.objects.all()
+        serializer = WorkSerializer(works, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = WorkSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+class WorkDetailView(RetrieveUpdateAPIView):
+    queryset = Work.objects.all()
+    serializer_class = WorkSerializer

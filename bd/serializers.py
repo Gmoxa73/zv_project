@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Okrug, Address, Device, TypeA
+from .models import Okrug, Address, Device, TypeA, Work
+
 
 class TypeASerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,7 +13,7 @@ class DeviceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Device
-        fields = ['id', 'cms', 'ip', 'type']
+        fields = ['id', 'ip', 'type']
 
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -56,3 +57,19 @@ class AddressSerializer(serializers.ModelSerializer):
                 Device.objects.create(address=instance, type=type_obj, **dev_data)
 
         return instance
+
+class WorkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Work
+        fields = ['id', 'date', 'status', 'device']
+        # Для частичного обновления явно разрешаем null/пустые значения
+        extra_kwargs = {
+            'date': {'required': False},
+            'status': {'required': False},
+            'device': {'required': False}
+        }
+    def validate_device(self, value):
+        """Проверка существования устройства"""
+        if not Device.objects.filter(id=value.id).exists():
+            raise serializers.ValidationError("Устройство не найдено")
+        return value
